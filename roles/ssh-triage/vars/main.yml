@@ -1,0 +1,4 @@
+---
+# tcpdump filters to be collectd
+
+tcpdump_filter: port 22

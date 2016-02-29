@@ -1,0 +1,10 @@
+
+- name: Gather EC2 Metadata Information
+  action: ec2_facts
+
+- name: Start tcpdump job to track SSH connections
+  become: yes
+  become_method: sudo
+  shell: >
+     nohup tcpdump -i any -w ssh-triage-{{ ansible_ec2_instance_id }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
+  when: ansible_os_family == 'RedHat'
