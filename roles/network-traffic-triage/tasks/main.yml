@@ -9,5 +9,5 @@
   become: yes
   become_method: sudo
   shell: >
-     nohup tcpdump -i any -w ssh-triage-{{ ansible_hostname }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
+     nohup tcpdump -i any -w network-triage-{{ ansible_hostname }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
   when: ansible_os_family == 'RedHat'
