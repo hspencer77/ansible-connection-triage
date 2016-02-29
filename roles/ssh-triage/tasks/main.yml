@@ -2,7 +2,14 @@
 - name: Gather EC2 Metadata Information
   action: ec2_facts
 
-- name: Start tcpdump job to track SSH connections
+- name: Install packages needed for analyzing network traffic
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+     - tcpdump.x86_64
+     - tcpick.x86_64
+  when: ansible_os_family == 'RedHat'
+
+- name: Start tcpdump job to track connections based on network filter
   become: yes
   become_method: sudo
   shell: >
