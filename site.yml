@@ -2,4 +2,4 @@
 - hosts: node-controllers
   gather_facts: true
   roles:
-  - ssh-triage
+  - network-traffic-triage

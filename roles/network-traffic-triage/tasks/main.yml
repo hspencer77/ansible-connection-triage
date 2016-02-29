@@ -1,7 +1,3 @@
-
-- name: Gather EC2 Metadata Information
-  action: ec2_facts
-
 - name: Install packages needed for analyzing network traffic
   yum: name={{ item }} state=latest update_cache=yes
   with_items:
@@ -13,5 +9,5 @@
   become: yes
   become_method: sudo
   shell: >
-     nohup tcpdump -i any -w ssh-triage-{{ ansible_ec2_instance_id }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
+     nohup tcpdump -i any -w ssh-triage-{{ ansible_hostname }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
   when: ansible_os_family == 'RedHat'
