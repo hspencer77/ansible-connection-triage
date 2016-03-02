@@ -1,13 +1,35 @@
-- name: Install packages needed for analyzing network traffic
+- name: Install packages needed for analyzing network traffic on RedHat Family Distros
   yum: name={{ item }} state=latest update_cache=yes
   with_items:
      - tcpdump.x86_64
      - tcpick.x86_64
   when: ansible_os_family == 'RedHat'
 
-- name: Start tcpdump job to track connections based on network filter
+- name: Update Apt cache 
+  become: yes
+  become_method: sudo
+  apt: update_cache=yes
+  when: ansible_os_family == 'Debian'
+
+- name: Install packages needed for analyzing network traffic on Debian Family Distros
+  become: yes
+  become_method: sudo
+  apt: name={{ item }} state=latest force=yes
+  with_items:
+     - tcpdump
+     - tcpick
+  when: ansible_os_family == 'Debian'
+
+- name: Start tcpdump job to track connections based on network filter on RedHat Family Distros
   become: yes
   become_method: sudo
   shell: >
      nohup tcpdump -i any -w network-triage-{{ ansible_hostname }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
   when: ansible_os_family == 'RedHat'
+
+- name: Start tcpdump job to track connections based on network filter on Debian Family Distros
+  become: yes
+  become_method: sudo
+  shell: >
+     nohup tcpdump -i any -w network-triage-{{ ansible_hostname }}.pcap -Als0 {{ tcpdump_filter }} 2>/dev/null &
+  when: ansible_os_family == 'Debian'
